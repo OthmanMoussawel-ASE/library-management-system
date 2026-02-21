@@ -239,34 +239,6 @@ Backend config is in `src/LibraryManagement.API/appsettings.json`. For local dev
 └── README.md
 ```
 
-## Recent Updates
-
-### AI Provider
-- Switched from Google Gemini to **Groq** (completely free, no credit card, no balance requirements)
-- Uses Llama 3.1 8B model for fast inference
-- Robust JSON parsing with fallback extraction
-
-### Backend Pagination
-- All list endpoints now use server-side pagination, sorting, and search
-- Authors, Categories, and Checkouts upgraded from client-side to server-side filtering
-- Whitelist-based sort field validation for security
-
-### Category Management
-- AI category suggestions now show existing matches AND new suggestions
-- One-click creation of AI-suggested new categories
-- Categories automatically selected after creation
-
-### User Management
-- Admins can now change user roles (Patron → Librarian → Admin)
-- Fixed role assignment API endpoint
-
-### Clean Architecture Refactor
-- All business logic moved from controllers to Application layer handlers
-- Auth operations (Login, Register, Refresh, Revoke) now go through MediatR pipeline
-- Dashboard, Checkout, and AI controllers no longer reference `DbContext` directly
-- Added `IPatronRepository` to domain for proper patron resolution in handlers
-- FluentValidation validators added for every command/query across all features
-- All list screens now search as the user types (debounced) instead of only on Enter
 
 ### Testing
 - Added xUnit test project with Moq and FluentAssertions
