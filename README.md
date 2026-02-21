@@ -4,8 +4,8 @@ A full-stack library management system built with .NET 10, Angular 18, and Postg
 
 ## Live Demo
 
-- **Frontend**: [https://YOUR_VERCEL_URL](https://YOUR_VERCEL_URL)
-- **API / Swagger**: [https://YOUR_RENDER_URL/swagger](https://YOUR_RENDER_URL/swagger)
+- **Frontend**: [https://library-management-system-chi-fawn.vercel.app](https://library-management-system-chi-fawn.vercel.app)
+- **API / Swagger**: [https://library-api-hbnu.onrender.com/swagger](https://library-api-hbnu.onrender.com/swagger)
 
 ### Demo Credentials
 
