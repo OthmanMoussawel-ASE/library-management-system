@@ -140,7 +140,7 @@ Backend config is in `src/LibraryManagement.API/appsettings.json`. For local dev
 }
 ```
 
-## Deployment (Free, No Credit Card)
+## Deployment
 
 ### 1. Database - Neon.tech
 
@@ -177,7 +177,7 @@ Backend config is in `src/LibraryManagement.API/appsettings.json`. For local dev
 3. Set interval to 5 minutes
 4. This prevents Render from sleeping your free service
 
-### 5. AI - Groq (Recommended, Free)
+### 5. AI - Groq 
 
 1. Go to [Groq Console](https://console.groq.com/keys)
 2. Create an API key (completely free, no credit card needed)
