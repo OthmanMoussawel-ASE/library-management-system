@@ -1,0 +1,93 @@
+<div class="book-detail-container">
+  <button mat-stroked-button [routerLink]="['/books']" class="back-button">
+    <mat-icon>arrow_back</mat-icon>
+    Back to list
+  </button>
+
+  @if (isLoading) {
+    <div class="loading">Loading...</div>
+  } @else if (book) {
+    <mat-card class="book-card">
+      <mat-card-header>
+        <mat-card-title>{{ book.title }}</mat-card-title>
+        <mat-card-subtitle>{{ book.authorName }}</mat-card-subtitle>
+      </mat-card-header>
+
+      <mat-card-content>
+        <div class="meta-row">
+          <span class="availability" [class.available]="book.isAvailable" [class.unavailable]="!book.isAvailable">
+            {{ book.isAvailable ? 'Available' : 'Unavailable' }}
+            ({{ book.availableCopies }} / {{ book.totalCopies }} copies)
+          </span>
+        </div>
+
+        @if (book.isbn) {
+          <div class="detail-row">
+            <strong>ISBN:</strong> {{ book.isbn }}
+          </div>
+        }
+
+        @if (book.description) {
+          <div class="detail-row description">
+            <strong>Description:</strong>
+            <p>{{ book.description }}</p>
+          </div>
+        }
+
+        @if (book.publisher) {
+          <div class="detail-row">
+            <strong>Publisher:</strong> {{ book.publisher }}
+          </div>
+        }
+
+        @if (book.publishedDate) {
+          <div class="detail-row">
+            <strong>Published:</strong> {{ book.publishedDate | date }}
+          </div>
+        }
+
+        @if (book.pageCount) {
+          <div class="detail-row">
+            <strong>Pages:</strong> {{ book.pageCount }}
+          </div>
+        }
+
+        @if (book.language) {
+          <div class="detail-row">
+            <strong>Language:</strong> {{ book.language }}
+          </div>
+        }
+
+        @if (book.categories && book.categories.length > 0) {
+          <div class="detail-row">
+            <strong>Categories:</strong>
+            <mat-chip-set>
+              @for (cat of book.categories; track cat) {
+                <mat-chip>{{ cat }}</mat-chip>
+              }
+            </mat-chip-set>
+          </div>
+        }
+      </mat-card-content>
+
+      <mat-card-actions>
+        @if (book.availableCopies > 0) {
+          <button mat-raised-button color="primary" (click)="checkout()">
+            <mat-icon>menu_book</mat-icon>
+            Checkout
+          </button>
+        }
+        @if (isLibrarian) {
+          <button mat-button [routerLink]="['/books', book.id, 'edit']">
+            <mat-icon>edit</mat-icon>
+            Edit
+          </button>
+          <button mat-button color="warn" (click)="deleteBook()">
+            <mat-icon>delete</mat-icon>
+            Delete
+          </button>
+        }
+      </mat-card-actions>
+    </mat-card>
+  }
+</div>

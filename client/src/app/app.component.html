@@ -1,0 +1,79 @@
+@if (isAuthRoute) {
+  <router-outlet />
+} @else {
+  <div class="app-shell">
+    <mat-toolbar color="primary" class="toolbar">
+      <button mat-icon-button (click)="sidenav.toggle()" aria-label="Toggle sidenav">
+        <mat-icon>menu</mat-icon>
+      </button>
+      <span class="toolbar-title">Library Management System</span>
+      <span class="spacer"></span>
+
+      @if (currentUser$ | async; as user) {
+        <button mat-button [matMenuTriggerFor]="userMenu" class="user-menu-trigger">
+          <mat-icon>account_circle</mat-icon>
+          <span class="user-name">{{ user.fullName }}</span>
+          <mat-icon>expand_more</mat-icon>
+        </button>
+        <mat-menu #userMenu="matMenu">
+          <div class="user-menu-header" mat-menu-item disabled>
+            <span class="user-email">{{ user.email }}</span>
+            <span class="user-role">{{ user.role }}</span>
+          </div>
+          <button mat-menu-item (click)="logout()">
+            <mat-icon>logout</mat-icon>
+            <span>Logout</span>
+          </button>
+        </mat-menu>
+      } @else {
+        <a mat-button routerLink="/auth/login">
+          <mat-icon>login</mat-icon>
+          <span>Login</span>
+        </a>
+      }
+    </mat-toolbar>
+
+    <mat-sidenav-container class="sidenav-container">
+      <mat-sidenav #sidenav mode="side" opened class="sidenav">
+        <mat-nav-list>
+          <a mat-list-item routerLink="/dashboard" routerLinkActive="active">
+            <mat-icon matListItemIcon>dashboard</mat-icon>
+            <span matListItemTitle>Dashboard</span>
+          </a>
+          <a mat-list-item routerLink="/books" routerLinkActive="active">
+            <mat-icon matListItemIcon>menu_book</mat-icon>
+            <span matListItemTitle>Books</span>
+          </a>
+          <a mat-list-item routerLink="/checkouts" routerLinkActive="active">
+            <mat-icon matListItemIcon>bookmark</mat-icon>
+            <span matListItemTitle>Checkouts</span>
+          </a>
+          @if (currentUser$ | async; as user) {
+            @if (user.role === 'Admin' || user.role === 'Librarian') {
+              <mat-divider></mat-divider>
+              <div class="nav-section-header">Management</div>
+              <a mat-list-item routerLink="/authors" routerLinkActive="active">
+                <mat-icon matListItemIcon>person</mat-icon>
+                <span matListItemTitle>Authors</span>
+              </a>
+              <a mat-list-item routerLink="/categories" routerLinkActive="active">
+                <mat-icon matListItemIcon>category</mat-icon>
+                <span matListItemTitle>Categories</span>
+              </a>
+            }
+            @if (user.role === 'Admin') {
+              <a mat-list-item routerLink="/admin" routerLinkActive="active">
+                <mat-icon matListItemIcon>admin_panel_settings</mat-icon>
+                <span matListItemTitle>Admin</span>
+              </a>
+            }
+          }
+        </mat-nav-list>
+      </mat-sidenav>
+
+      <mat-sidenav-content class="content">
+        <router-outlet />
+      </mat-sidenav-content>
+    </mat-sidenav-container>
+  </div>
+}

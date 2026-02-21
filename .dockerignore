@@ -1,0 +1,12 @@
+client/
+tests/
+.git/
+.vs/
+**/bin/
+**/obj/
+**/.angular/
+**/node_modules/
+*.md
+docker-compose.yml
+.gitignore
+.dockerignore

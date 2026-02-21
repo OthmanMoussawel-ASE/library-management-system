@@ -1,0 +1,253 @@
+<div class="book-form-container">
+  <h1>{{ isEditMode ? 'Edit Book' : 'Add Book' }}</h1>
+
+  @if (isLoading) {
+    <div class="loading">Loading...</div>
+  } @else {
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="book-form">
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Title</mat-label>
+          <input matInput formControlName="title" placeholder="Book title" />
+          @if (form.get('title')?.hasError('required') && form.get('title')?.touched) {
+            <mat-error>Title is required</mat-error>
+          }
+          @if (form.get('title')?.hasError('maxlength')) {
+            <mat-error>Max 200 characters</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="form-row two-cols">
+        <div class="field-with-action">
+          <mat-form-field appearance="outline">
+            <mat-label>Author</mat-label>
+            <mat-select formControlName="authorId" placeholder="Select author">
+              @for (author of authors; track author.id) {
+                <mat-option [value]="author.id">{{ author.fullName }}</mat-option>
+              }
+            </mat-select>
+            @if (form.get('authorId')?.hasError('required') && form.get('authorId')?.touched) {
+              <mat-error>Author is required</mat-error>
+            }
+          </mat-form-field>
+          <button mat-icon-button type="button" color="primary" (click)="showNewAuthor = !showNewAuthor" matTooltip="Add new author">
+            <mat-icon>{{ showNewAuthor ? 'close' : 'person_add' }}</mat-icon>
+          </button>
+        </div>
+
+        <mat-form-field appearance="outline">
+          <mat-label>ISBN</mat-label>
+          <input matInput formControlName="isbn" placeholder="ISBN (digits and dashes only)" />
+          @if (form.get('isbn')?.hasError('pattern') && form.get('isbn')?.touched) {
+            <mat-error>ISBN must contain only digits and dashes</mat-error>
+          }
+          @if (form.get('isbn')?.hasError('maxlength')) {
+            <mat-error>Max 20 characters</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      @if (showNewAuthor) {
+        <div class="inline-create-card">
+          <span class="inline-create-title">New Author</span>
+          <div class="inline-create-fields">
+            <mat-form-field appearance="outline">
+              <mat-label>First Name</mat-label>
+              <input matInput [(ngModel)]="newAuthorFirstName" [ngModelOptions]="{ standalone: true }" />
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Last Name</mat-label>
+              <input matInput [(ngModel)]="newAuthorLastName" [ngModelOptions]="{ standalone: true }" />
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Biography (optional)</mat-label>
+              <input matInput [(ngModel)]="newAuthorBio" [ngModelOptions]="{ standalone: true }" />
+            </mat-form-field>
+          </div>
+          <div class="inline-create-actions">
+            <button mat-button type="button" (click)="showNewAuthor = false">Cancel</button>
+            <button mat-flat-button color="primary" type="button" (click)="addAuthor()" [disabled]="isSavingAuthor || !newAuthorFirstName.trim() || !newAuthorLastName.trim()">
+              {{ isSavingAuthor ? 'Saving...' : 'Add Author' }}
+            </button>
+          </div>
+        </div>
+      }
+
+      <div class="form-row">
+        <div class="field-with-action description-field">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Description</mat-label>
+            <textarea
+              matInput
+              formControlName="description"
+              placeholder="Book description"
+              rows="4"
+            ></textarea>
+            @if (form.get('description')?.hasError('maxlength')) {
+              <mat-error>Max 2000 characters</mat-error>
+            }
+          </mat-form-field>
+          <button
+            mat-icon-button
+            type="button"
+            color="accent"
+            (click)="generateDescription()"
+            [disabled]="isGeneratingDescription"
+            matTooltip="AI Generate Description"
+          >
+            <mat-icon>{{ isGeneratingDescription ? 'hourglass_empty' : 'auto_awesome' }}</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <mat-form-field appearance="outline" class="full-width">
+          <mat-label>Cover Image URL</mat-label>
+          <input matInput formControlName="coverImageUrl" placeholder="https://..." />
+          @if (form.get('coverImageUrl')?.hasError('pattern') && form.get('coverImageUrl')?.touched) {
+            <mat-error>Enter a valid URL (must start with http:// or https://)</mat-error>
+          }
+          @if (form.get('coverImageUrl')?.hasError('maxlength')) {
+            <mat-error>Max 500 characters</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="form-row three-cols">
+        <mat-form-field appearance="outline">
+          <mat-label>Total Copies</mat-label>
+          <input matInput type="number" formControlName="totalCopies" min="1" />
+          @if (form.get('totalCopies')?.hasError('required') && form.get('totalCopies')?.touched) {
+            <mat-error>Required</mat-error>
+          }
+          @if (form.get('totalCopies')?.hasError('min')) {
+            <mat-error>At least 1 copy</mat-error>
+          }
+          @if (form.get('totalCopies')?.hasError('max')) {
+            <mat-error>Max 1000 copies</mat-error>
+          }
+          @if (form.get('totalCopies')?.hasError('pattern')) {
+            <mat-error>Must be a whole number</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Published Date</mat-label>
+          <input matInput [matDatepicker]="picker" formControlName="publishedDate" />
+          <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+          <mat-datepicker #picker></mat-datepicker>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Page Count</mat-label>
+          <input matInput type="number" formControlName="pageCount" min="1" />
+          @if (form.get('pageCount')?.hasError('min')) {
+            <mat-error>At least 1 page</mat-error>
+          }
+          @if (form.get('pageCount')?.hasError('max')) {
+            <mat-error>Max 10,000 pages</mat-error>
+          }
+          @if (form.get('pageCount')?.hasError('pattern')) {
+            <mat-error>Must be a whole number</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="form-row two-cols">
+        <mat-form-field appearance="outline">
+          <mat-label>Publisher</mat-label>
+          <input matInput formControlName="publisher" placeholder="Publisher name" />
+          @if (form.get('publisher')?.hasError('maxlength')) {
+            <mat-error>Max 200 characters</mat-error>
+          }
+        </mat-form-field>
+
+        <mat-form-field appearance="outline">
+          <mat-label>Language</mat-label>
+          <input matInput formControlName="language" placeholder="e.g. English" />
+          @if (form.get('language')?.hasError('maxlength')) {
+            <mat-error>Max 50 characters</mat-error>
+          }
+        </mat-form-field>
+      </div>
+
+      <div class="form-row">
+        <div class="field-with-action">
+          <mat-form-field appearance="outline" class="full-width">
+            <mat-label>Categories</mat-label>
+            <mat-select formControlName="categoryIds" multiple placeholder="Select categories">
+              @for (category of categories; track category.id) {
+                <mat-option [value]="category.id">{{ category.name }}</mat-option>
+              }
+            </mat-select>
+          </mat-form-field>
+          <button
+            mat-icon-button
+            type="button"
+            color="accent"
+            (click)="suggestCategories()"
+            [disabled]="isSuggestingCategories"
+            matTooltip="AI Suggest Categories"
+          >
+            <mat-icon>{{ isSuggestingCategories ? 'hourglass_empty' : 'auto_awesome' }}</mat-icon>
+          </button>
+          <button mat-icon-button type="button" color="primary" (click)="showNewCategory = !showNewCategory" matTooltip="Add new category">
+            <mat-icon>{{ showNewCategory ? 'close' : 'add_circle' }}</mat-icon>
+          </button>
+        </div>
+      </div>
+
+      @if (suggestedNewCategories.length > 0) {
+        <div class="suggested-categories-card">
+          <span class="suggested-title">AI Suggested New Categories</span>
+          <p class="suggested-hint">These categories don't exist yet. Create them to use:</p>
+          <div class="suggested-chips">
+            @for (name of suggestedNewCategories; track name) {
+              <div class="suggested-chip">
+                <span class="chip-name">{{ name }}</span>
+                <button mat-icon-button type="button" color="primary" (click)="createSuggestedCategory(name)" matTooltip="Create category">
+                  <mat-icon>add_circle</mat-icon>
+                </button>
+                <button mat-icon-button type="button" (click)="dismissSuggestedCategory(name)" matTooltip="Dismiss">
+                  <mat-icon>close</mat-icon>
+                </button>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      @if (showNewCategory) {
+        <div class="inline-create-card">
+          <span class="inline-create-title">New Category</span>
+          <div class="inline-create-fields">
+            <mat-form-field appearance="outline">
+              <mat-label>Name</mat-label>
+              <input matInput [(ngModel)]="newCategoryName" [ngModelOptions]="{ standalone: true }" />
+            </mat-form-field>
+            <mat-form-field appearance="outline">
+              <mat-label>Description (optional)</mat-label>
+              <input matInput [(ngModel)]="newCategoryDesc" [ngModelOptions]="{ standalone: true }" />
+            </mat-form-field>
+          </div>
+          <div class="inline-create-actions">
+            <button mat-button type="button" (click)="showNewCategory = false">Cancel</button>
+            <button mat-flat-button color="primary" type="button" (click)="addCategory()" [disabled]="isSavingCategory || !newCategoryName.trim()">
+              {{ isSavingCategory ? 'Saving...' : 'Add Category' }}
+            </button>
+          </div>
+        </div>
+      }
+
+      <div class="form-actions">
+        <button mat-button type="button" [routerLink]="isEditMode ? ['/books', bookId] : ['/books']">
+          Cancel
+        </button>
+        <button mat-raised-button color="primary" type="submit" [disabled]="isSaving">
+          {{ isSaving ? 'Saving...' : (isEditMode ? 'Update' : 'Create') }}
+        </button>
+      </div>
+    </form>
+  }
+</div>

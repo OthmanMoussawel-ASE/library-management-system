@@ -1,0 +1,37 @@
+## .NET
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+.vs/
+*.csproj.user
+
+## Secrets
+appsettings.Development.json
+.env
+*.pfx
+*.key
+
+## Node / Angular
+client/node_modules/
+client/dist/
+client/.angular/
+
+## IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+
+## OS
+.DS_Store
+Thumbs.db
+
+## Logs
+logs/
+*.log
+
+## Vercel
+client/.vercel/

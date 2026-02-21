@@ -1,0 +1,11 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/LibraryManagement.API/LibraryManagement.API.csproj" />
+    <Project Path="src/LibraryManagement.Application/LibraryManagement.Application.csproj" />
+    <Project Path="src/LibraryManagement.Domain/LibraryManagement.Domain.csproj" />
+    <Project Path="src/LibraryManagement.Infrastructure/LibraryManagement.Infrastructure.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/LibraryManagement.Tests/LibraryManagement.Tests.csproj" />
+  </Folder>
+</Solution>

@@ -1,0 +1,98 @@
+<div class="checkouts-page">
+  <header class="page-header">
+    <div class="header-content">
+      <div>
+        <h1>Checkouts</h1>
+        <p class="subtitle">Manage and track book checkouts</p>
+      </div>
+      <mat-form-field appearance="outline" class="search-field">
+        <mat-label>Search</mat-label>
+        <input matInput [(ngModel)]="searchTerm" (input)="onSearch()" placeholder="Search by book title or patron..." />
+        <mat-icon matPrefix>search</mat-icon>
+      </mat-form-field>
+    </div>
+  </header>
+
+  <div class="table-container">
+    @if (isLoading) {
+      <div class="loading-overlay">
+        <mat-spinner diameter="48"></mat-spinner>
+        <span>Loading checkouts...</span>
+      </div>
+    }
+
+    <table mat-table [dataSource]="dataSource" matSort (matSortChange)="onSortChange($event)" class="checkouts-table">
+      <ng-container matColumnDef="bookTitle">
+        <th mat-header-cell *matHeaderCellDef>Book</th>
+        <td mat-cell *matCellDef="let row">{{ row.bookTitle }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="patron">
+        <th mat-header-cell *matHeaderCellDef>Patron</th>
+        <td mat-cell *matCellDef="let row">
+          <div class="patron-info">
+            <span class="patron-name">{{ row.patronName }}</span>
+            <span class="patron-email">{{ row.patronEmail }}</span>
+          </div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="checkedOutAt">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="checkedoutat">Checked Out</th>
+        <td mat-cell *matCellDef="let row">{{ formatDate(row.checkedOutAt) }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="dueDate">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="duedate">Due Date</th>
+        <td mat-cell *matCellDef="let row">{{ formatDate(row.dueDate) }}</td>
+      </ng-container>
+
+      <ng-container matColumnDef="status">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header="status">Status</th>
+        <td mat-cell *matCellDef="let row">
+          <mat-chip [class]="getStatusChipClass(row.status, row.isOverdue)">
+            {{ row.isOverdue ? 'Overdue' : row.status }}
+          </mat-chip>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="actions">
+        <th mat-header-cell *matHeaderCellDef>Actions</th>
+        <td mat-cell *matCellDef="let row">
+          @if (row.status === 'Active') {
+            <button
+              mat-icon-button
+              color="primary"
+              (click)="returnBook(row)"
+              matTooltip="Return book"
+            >
+              <mat-icon>assignment_return</mat-icon>
+            </button>
+          }
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+          <div class="empty-state">
+            <mat-icon>bookmark_border</mat-icon>
+            <p>No checkouts found</p>
+          </div>
+        </td>
+      </tr>
+    </table>
+
+    <mat-paginator
+      [length]="totalCount"
+      [pageSize]="pageSize"
+      [pageIndex]="pageIndex"
+      [pageSizeOptions]="[5, 10, 25, 50]"
+      (page)="onPageChange($event)"
+      showFirstLastButtons
+    >
+    </mat-paginator>
+  </div>
+</div>

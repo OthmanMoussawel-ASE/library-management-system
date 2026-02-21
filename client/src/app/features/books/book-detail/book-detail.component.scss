@@ -1,0 +1,79 @@
+.book-detail-container {
+  padding: 1.5rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.back-button {
+  margin-bottom: 1.5rem;
+}
+
+.loading {
+  padding: 3rem;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.6);
+}
+
+.book-card {
+  padding: 1.5rem;
+
+  mat-card-header {
+    margin-bottom: 1rem;
+  }
+
+  mat-card-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+  }
+
+  mat-card-subtitle {
+    font-size: 1rem;
+    margin-top: 0.25rem;
+  }
+
+  .meta-row {
+    margin-bottom: 1rem;
+  }
+
+  .availability {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    font-weight: 500;
+    font-size: 0.875rem;
+
+    &.available {
+      background: rgba(76, 175, 80, 0.15);
+      color: #2e7d32;
+    }
+
+    &.unavailable {
+      background: rgba(244, 67, 54, 0.15);
+      color: #c62828;
+    }
+  }
+
+  .detail-row {
+    margin-bottom: 1rem;
+
+    &.description p {
+      margin: 0.5rem 0 0;
+      line-height: 1.6;
+      color: rgba(0, 0, 0, 0.8);
+    }
+  }
+
+  mat-chip-set {
+    display: inline-flex;
+    flex-wrap: wrap;
+    gap: 0.25rem;
+    margin-left: 0.5rem;
+  }
+
+  mat-card-actions {
+    padding-top: 1rem;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+}
