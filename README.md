@@ -44,7 +44,7 @@ Domain (zero dependencies) → Application (MediatR, DTOs) → Infrastructure (E
 - **Dynamic pagination, sorting, and filtering** via `QueryParameters` + `PagedResult<T>` (all server-side)
 - **Domain Events** dispatched on `SaveChanges`
 - **Soft deletes** with query filters
-- **Cache ** on all CRUD operations
+- **Cache** on all CRUD operations
 
 ## Features
 
